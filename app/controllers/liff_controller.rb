@@ -20,5 +20,7 @@ class LiffController < ApplicationController
 
     res = Rails.application.routes.router.serve(request)
     res[2].body
+  rescue
+    res[2].to_s
   end
 end
