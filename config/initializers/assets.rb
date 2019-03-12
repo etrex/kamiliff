@@ -1,1 +1,1 @@
-Rails.application.config.assets.precompile << "rails_liff.js"
+Rails.application.config.assets.precompile << "kamiliff.js"

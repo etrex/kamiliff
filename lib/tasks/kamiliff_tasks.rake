@@ -1,4 +1,4 @@
 # desc "Explaining what the task does"
-# task :rails_liff do
+# task :kamiliff do
 #   # Task goes here
 # end

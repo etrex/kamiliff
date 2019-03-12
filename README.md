@@ -1,6 +1,6 @@
-# RailsLiff
+# Kamiliff
 
-RailsLiff make LIFF easy to use.
+Kamiliff make LIFF easy to use.
 
 # Feature
 - register LIFF once and reuse to your all path.
@@ -10,7 +10,7 @@ RailsLiff make LIFF easy to use.
 ## Installation
 
 ```ruby
-gem 'rails_liff'
+gem 'kamiliff'
 ```
 
 login to line developers, and create 3 LIFF for 3 different size.
@@ -42,7 +42,7 @@ LIFF_FULL=line://app/for_full_liff_id
 
 ### Implement LIFF View
 
-RailsLiff using view format `.liff`, so you can reuse exists controller and model, you can create a LIFF form by only adding a new view file.
+Kamiliff using view format `.liff`, so you can reuse exists controller and model, you can create a LIFF form by only adding a new view file.
 
 Suppose you have a resource `todos`, you want to create a liff form for `todos/new`, so you create a file `app/views/todos/new.liff.erb`, the content is as follows:
 

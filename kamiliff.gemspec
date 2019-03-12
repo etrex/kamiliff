@@ -1,15 +1,15 @@
 $:.push File.expand_path("lib", __dir__)
 
 # Maintain your gem's version:
-require "rails_liff/version"
+require "kamiliff/version"
 
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |spec|
-  spec.name        = "rails_liff"
-  spec.version     = RailsLiff::VERSION
+  spec.name        = "kamiliff"
+  spec.version     = Kamiliff::VERSION
   spec.authors     = ["etrex kuo"]
   spec.email       = ["et284vu065k3@gmail.com"]
-  spec.homepage    = "https://github.com/etrex/rails_liff"
+  spec.homepage    = "https://github.com/etrex/kamiliff"
   spec.summary     = %q{An easy way to use LINE Front-end Framework(LIFF) on rails.}
   spec.description = %q{An easy way to use LINE Front-end Framework(LIFF) on rails.}
   spec.license     = "MIT"
