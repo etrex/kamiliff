@@ -50,8 +50,6 @@ Suppose you have a resource `todos`, you want to create a liff form for `todos/n
 <% content_for :title, "new todo" %>
 
 <%= render "todos/form.html", todo: @todo %>
-
-<%= link_to "test", liff_path(path: '/todos/new') %>
 ```
 
 You can test the form at [localhost:3000/todos/new.liff](localhost:3000/todos/new.liff)
