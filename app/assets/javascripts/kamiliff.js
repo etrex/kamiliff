@@ -6,10 +6,10 @@ function liff_send_text_message(text){
         text: text
       }
     ]
-  ).then(() => {
+  ).then(function(){
     liff.closeWindow();
   })
-  .catch((err) => {
+  .catch(function(err){
     alert('error', err);
   });
 }
@@ -38,9 +38,9 @@ $(function(){
   function get_form_data(form_element){
     var excpet = ["utf8","authenticity_token"];
     var form = form_element.serializeArray();
-    form = form.filter((a)=>{ return !excpet.includes(a.name) })
+    form = form.filter(function(a){ return !excpet.includes(a.name) })
     var data = {}
-    form.forEach((a)=>{ set_object_value(data, a.name, a.value) })
+    form.forEach(function(a){ set_object_value(data, a.name, a.value) })
     return data;
   }
 
@@ -48,7 +48,7 @@ $(function(){
     var o = object;
     var p = path.replace(/(\]\[)/g, "[").replace(/]$/g, "").split("[")
     var last_key = p.pop();
-    p.forEach((key)=>{
+    p.forEach(function(key){
       o[key] = o[key] || {}
       o = o[key]
     })
