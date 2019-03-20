@@ -74,7 +74,9 @@ Suppose you have a resource `todos`, you want to create a liff form for `todos/n
 
 You can test the form at [localhost:3000/todos/new.liff](localhost:3000/todos/new.liff)
 
-### Receive LIFF Submit Event
+### Receive LIFF Submit Event And Send Message
+
+you need to add those js to handle the `liff_submit` event when user submit a form in LIFF.
 
 ``` js
 window.addEventListener("liff_submit", function(event){
