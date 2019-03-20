@@ -89,7 +89,7 @@ window.addEventListener("liff_submit", function(event){
 ```
 
 ## Author
-create by [etrex](https://etrex.tw)
+Create by [etrex](https://etrex.tw)
 
 ## License
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
