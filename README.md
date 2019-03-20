@@ -13,7 +13,7 @@ Kamiliff make LIFF easy to use.
 gem 'kamiliff'
 ```
 
-login to line developers, and create 3 LIFF for 3 different size.
+Login to line developers, and create 3 LIFF for 3 different size.
 
 - for compact
   - name: Compact
@@ -30,7 +30,7 @@ login to line developers, and create 3 LIFF for 3 different size.
   - size: Full
   - Endpoint URL: https://yourwebsite/liff
 
-and then copy the result to enviroment parameters:
+And then copy the result to enviroment parameters:
 
 ```
 LIFF_COMPACT=line://app/for_compact_liff_id
@@ -44,7 +44,7 @@ LIFF_FULL=line://app/for_full_liff_id
 
 You can change any path to liff by `liff_path` method.
 
-for example:
+For example:
 
 ```
 liff_path(path: '/todos/new')
@@ -76,7 +76,7 @@ You can test the form at [localhost:3000/todos/new.liff](localhost:3000/todos/ne
 
 ### Receive LIFF Submit Event And Send Message
 
-you need to add those js to handle the `liff_submit` event when user submit a form in LIFF.
+You need to add those js to handle the `liff_submit` event when user submit a form in LIFF.
 
 ``` js
 window.addEventListener("liff_submit", function(event){
