@@ -40,20 +40,6 @@ LIFF_FULL=line://app/for_full_liff_id
 
 ## Usage
 
-### Implement LIFF View
-
-Kamiliff using view format `.liff`, so you can reuse exists controller and model, you can create a LIFF form by only adding a new view file.
-
-Suppose you have a resource `todos`, you want to create a liff form for `todos/new`, so you create a file `app/views/todos/new.liff.erb`, the content is as follows:
-
-```
-<% content_for :title, "new todo" %>
-
-<%= render "todos/form.html", todo: @todo %>
-```
-
-You can test the form at [localhost:3000/todos/new.liff](localhost:3000/todos/new.liff)
-
 ### Generate LIFF Link
 
 You can change any path to liff by `liff_path` method.
@@ -73,6 +59,32 @@ liff_path(path: '/todos/new', liff_size: :full)
 ```
 
 liff_path method add format :liff automatically.
+
+### Implement LIFF View
+
+Kamiliff using view format `.liff`, so you can reuse exists controller and model, you can create a LIFF form by only adding a new view file.
+
+Suppose you have a resource `todos`, you want to create a liff form for `todos/new`, so you create a file `app/views/todos/new.liff.erb`, the content is as follows:
+
+```
+<% content_for :title, "new todo" %>
+
+<%= render "todos/form.html", todo: @todo %>
+```
+
+You can test the form at [localhost:3000/todos/new.liff](localhost:3000/todos/new.liff)
+
+### Receive LIFF Submit Event
+
+``` js
+window.addEventListener("liff_submit", function(event){
+  var json = JSON.stringify(event.detail.data);
+  var url = event.detail.url;
+  var method = event.detail.method;
+  var request_text = method + " " + url + "\n" + json;
+  liff_send_text_message(request_text);
+});
+```
 
 ## Author
 create by [etrex](https://etrex.tw)
