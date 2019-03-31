@@ -13,7 +13,7 @@ Kamiliff make LIFF easy to use.
 gem 'kamiliff'
 ```
 
-login to line developers, and create 3 LIFF for 3 different size.
+Login to line developers, and create 3 LIFF for 3 different size.
 
 - for compact
   - name: Compact
@@ -30,7 +30,7 @@ login to line developers, and create 3 LIFF for 3 different size.
   - size: Full
   - Endpoint URL: https://yourwebsite/liff
 
-and then copy the result to enviroment parameters:
+And then copy the result to enviroment parameters:
 
 ```
 LIFF_COMPACT=line://app/for_compact_liff_id
@@ -40,25 +40,11 @@ LIFF_FULL=line://app/for_full_liff_id
 
 ## Usage
 
-### Implement LIFF View
-
-Kamiliff using view format `.liff`, so you can reuse exists controller and model, you can create a LIFF form by only adding a new view file.
-
-Suppose you have a resource `todos`, you want to create a liff form for `todos/new`, so you create a file `app/views/todos/new.liff.erb`, the content is as follows:
-
-```
-<% content_for :title, "new todo" %>
-
-<%= render "todos/form.html", todo: @todo %>
-```
-
-You can test the form at [localhost:3000/todos/new.liff](localhost:3000/todos/new.liff)
-
 ### Generate LIFF Link
 
 You can change any path to liff by `liff_path` method.
 
-for example:
+For example:
 
 ```
 liff_path(path: '/todos/new')
@@ -74,8 +60,36 @@ liff_path(path: '/todos/new', liff_size: :full)
 
 liff_path method add format :liff automatically.
 
+### Implement LIFF View
+
+Kamiliff using view format `.liff`, so you can reuse exists controller and model, you can create a LIFF form by only adding a new view file.
+
+Suppose you have a resource `todos`, you want to create a liff form for `todos/new`, so you create a file `app/views/todos/new.liff.erb`, the content is as follows:
+
+```
+<% content_for :title, "new todo" %>
+
+<%= render "todos/form.html", todo: @todo %>
+```
+
+You can test the form at [localhost:3000/todos/new.liff](localhost:3000/todos/new.liff)
+
+### Receive LIFF Submit Event And Send Message
+
+You need to add those js to handle the `liff_submit` event when user submit a form in LIFF.
+
+``` js
+window.addEventListener("liff_submit", function(event){
+  var json = JSON.stringify(event.detail.data);
+  var url = event.detail.url;
+  var method = event.detail.method;
+  var request_text = method + " " + url + "\n" + json;
+  liff_send_text_message(request_text);
+});
+```
+
 ## Author
-create by [etrex](https://etrex.tw)
+Create by [etrex](https://etrex.tw)
 
 ## License
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
