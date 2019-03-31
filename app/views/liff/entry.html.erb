@@ -1,1 +1,51 @@
-<%= raw @body %>
+<% content_for :js do %>
+<script>
+(function(){
+  function append_csrf(data){
+    var csrf_param = undefined;
+    var csrf_token = undefined;
+    var metas = document.getElementsByTagName("META");
+    for(var i = 0 ; i < metas.length ; i++){
+      var meta = metas[i];
+      if(meta.getAttribute('name') == 'csrf-param'){
+        csrf_param = meta.content;
+      }
+      if(meta.getAttribute('name') == 'csrf-token'){
+        csrf_token = meta.content;
+      }
+    }
+    if(csrf_param != undefined && csrf_token != undefined){
+      data[csrf_param] = csrf_token;
+    }
+    return data;
+  }
+
+  function render_body(body){
+    $("#liff_body").html(body);
+  }
+
+  function route(data){
+    $.ajax({
+      type: "POST",
+      url: '/liff_route',
+      data: append_csrf(data)
+    }).done(function(html){
+      render_body(html);
+      register_kamiliff_submit();
+    }).fail(function(e){
+      alert("on error: " + JSON.stringify(e));
+    });
+  }
+
+  liff.init(
+    data => {
+      data.path = '<%= @path %>';
+      route(data);
+    },
+    err => {
+      alert("Please open this url in Line.");
+    }
+  );
+})();
+</script>
+<% end %>

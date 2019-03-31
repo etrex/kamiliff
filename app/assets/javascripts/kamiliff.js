@@ -14,7 +14,7 @@ function liff_send_text_message(text){
   });
 }
 
-$(function(){
+function register_kamiliff_submit(){
   function dispatch_liff_event(data){
     var event = new CustomEvent('liff_submit', { 'detail': data });
     window.dispatchEvent(event);
@@ -54,4 +54,4 @@ $(function(){
     })
     o[last_key] = value;
   }
-});
+}

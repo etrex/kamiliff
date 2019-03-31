@@ -1,10 +1,17 @@
 
 class LiffController < ApplicationController
-  layout false
+  # layout :liff
+  layout false, only: :route
+
 
   def entry
     query = Rack::Utils.parse_nested_query(request.query_string)
-    @body = reserve_route(query["path"], format: :liff)
+    @path = query["path"]
+  end
+
+  def route
+    path = params["path"]
+    @body = reserve_route(path, format: :liff)
   end
 
   private
