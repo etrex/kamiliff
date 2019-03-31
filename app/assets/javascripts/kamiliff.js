@@ -9,8 +9,8 @@ function liff_send_text_message(text){
   ).then(function(){
     liff.closeWindow();
   })
-  .catch(function(err){
-    alert('error', err);
+  .catch(function(error){
+    alert('error: ' + JSON.stringify(error));
   });
 }
 
