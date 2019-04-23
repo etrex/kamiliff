@@ -9,7 +9,7 @@ Kamiliff make LIFF easy to use.
 
 ## Installation & Usage
 
-see my kamiliff demo: [https://github.com/etrex/kamiliff_demo](https://github.com/etrex/kamiliff_demo)
+See my kamiliff demo: [https://github.com/etrex/kamiliff_demo](https://github.com/etrex/kamiliff_demo)
 
 ## Author
 Create by [etrex](https://etrex.tw)
