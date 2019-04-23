@@ -10,7 +10,7 @@ function liff_send_text_message(text){
     liff.closeWindow();
   })
   .catch(function(error){
-    alert('error: ' + JSON.stringify(error));
+    alert('user doesn’t grant required permissions yet.');
   });
 }
 
