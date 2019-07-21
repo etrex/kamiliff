@@ -1,6 +1,5 @@
 
 class LiffController < ApplicationController
-  # layout :liff
   layout false, only: :route
 
 
@@ -11,7 +10,7 @@ class LiffController < ApplicationController
 
   def route
     path = params["path"]
-    @body = reserve_route(path, format: :liff)
+    @body = reserve_route(path, request_params: source_info, format: :liff)
   end
 
   private
@@ -29,5 +28,21 @@ class LiffController < ApplicationController
     res[2].body
   rescue
     res[2].to_s
+  end
+
+  def source_info
+    context = params["context"]
+    return nil if context.nil?
+
+    source_type = context["type"].gsub("utou", "user")
+    source_group_id = context["roomId"] || context["groupId"] || context["userId"]
+    source_user_id = context["userId"]
+
+    {
+      platform_type: 'line',
+      source_type: source_type,
+      source_group_id: source_group_id,
+      source_user_id: source_user_id,
+    }
   end
 end
