@@ -24,6 +24,11 @@
     $("#liff_body").html(body);
   }
 
+  function dispatch_ready_event(data){
+    var event = new CustomEvent('liff_ready');
+    window.dispatchEvent(event);
+  }
+
   function route(data){
     $.ajax({
       type: "POST",
@@ -31,7 +36,7 @@
       data: append_csrf(data)
     }).done(function(html){
       render_body(html);
-      register_kamiliff_submit();
+      dispatch_ready_event();
     }).fail(function(e){
       alert("on error: " + JSON.stringify(e));
     });
