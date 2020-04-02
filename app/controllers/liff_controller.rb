@@ -5,6 +5,12 @@ class LiffController < ApplicationController
 
   def entry
     query = Rack::Utils.parse_nested_query(request.query_string)
+
+    # fix liff 2.0 path issue
+    if query["liff.state"].present?
+      query = Rack::Utils.parse_nested_query(query["liff.state"][1..-1])
+    end
+
     @path = query["path"]
   end
 
