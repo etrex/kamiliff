@@ -2,16 +2,17 @@
 class LiffController < ApplicationController
   layout false, only: :route
 
-
   def entry
     query = Rack::Utils.parse_nested_query(request.query_string)
 
-    # fix liff 2.0 path issue
-    if query["liff.state"].present?
-      query = Rack::Utils.parse_nested_query(query["liff.state"][1..-1])
+    # fix liff 2.0 redirect issue
+    @need_reload = query["liff.state"].present?
+    if(@need_reload)
+      querystring = query["liff.state"][(query["liff.state"].index('?')+1)..-1]
+      query = Rack::Utils.parse_nested_query(querystring)
     end
 
-    @path = query["path"]
+    @liff = LiffService.new(query)
   end
 
   def route
@@ -32,7 +33,7 @@ class LiffController < ApplicationController
 
     res = Rails.application.routes.router.serve(request)
     res[2].body
-  rescue
+  rescue Exception => e
     res[2].to_s
   end
 

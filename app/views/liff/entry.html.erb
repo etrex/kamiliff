@@ -42,15 +42,24 @@
     });
   }
 
-  liff.init(
-    data => {
-      data.path = '<%= @path %>';
-      route(data);
-    },
-    err => {
-      alert("Please open this url in Line.");
+  liff.init({
+    liffId: "<%= @liff.id %>"
+  })
+  .then(() => {
+    if (!liff.isLoggedIn()) {
+      liff.login();
+    }else{
+      const data = {};
+      data.context = liff.getContext();
+      data.path = "<%= @liff.path %>";
+      <% if !@need_reload %>
+        route(data);
+      <% end %>
     }
-  );
+  })
+  .catch((err) => {
+    console.log(err.code, err.message);
+  });
 })();
 </script>
 <% end %>
