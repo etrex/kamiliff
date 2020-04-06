@@ -12,6 +12,8 @@ Kamiliff make LIFF easy to use.
 ```bash
 # create rails repository
 rails new kamiliff_demo
+# change directory
+cd kamiliff_demo
 # install gem
 bundle add kamiliff
 bundle add dotenv-rails
@@ -40,7 +42,7 @@ Since the compact size is default. You could only create the compact one.
 **NOTICE:** As LINE announcement, due to a function enhancement with LIFF v2, you should add LIFF apps to LINE Login channel. The LIFF apps added to Messaging API channels are still allowed to use.
 
 ### Set environment variables
-Create a file `.env` with the following content under root directory:
+Create a file `.env` with the following content under the root directory. Kamiliff provides two setting ways, you can choose the one based on the position where LIFF apps added.
 
 - LIFF apps added to Messaging API channel (v1)
 ```
