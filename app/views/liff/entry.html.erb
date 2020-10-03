@@ -50,12 +50,15 @@
       if (!liff.isLoggedIn()) {
         liff.login();
       }else{
-        const data = {};
-        data.context = liff.getContext();
-        data.path = "<%= @liff.path %>";
-        <% if !@need_reload %>
-          route(data);
-        <% end %>
+        liff.getProfile().then(profile => {
+          const data = {};
+          data.context = liff.getContext();
+          alert(profile.displayName);
+          data.path = "<%= @liff.path %>";
+          <% if !@need_reload %>
+            route(data);
+          <% end %>
+        })
       }
     })
     .catch((err) => {

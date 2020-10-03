@@ -1,5 +1,5 @@
 
-class LiffController < ApplicationController
+class LiffController < ActionController::Base
   layout false, only: :route
 
   def entry
