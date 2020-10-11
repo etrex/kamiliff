@@ -53,7 +53,7 @@
         liff.getProfile().then(profile => {
           const data = {};
           data.context = liff.getContext();
-          alert(profile.displayName);
+          data.profile = profile;
           data.path = "<%= @liff.path %>";
           <% if !@need_reload %>
             route(data);

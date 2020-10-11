@@ -45,11 +45,14 @@ class LiffController < ActionController::Base
     source_group_id = context["roomId"] || context["groupId"] || context["userId"]
     source_user_id = context["userId"]
 
+    profile = params["profile"]
+
     {
       platform_type: 'line',
       source_type: source_type,
       source_group_id: source_group_id,
       source_user_id: source_user_id,
+      profile: profile
     }
   end
 end
