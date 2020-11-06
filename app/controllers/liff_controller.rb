@@ -32,9 +32,12 @@ class LiffController < ActionController::Base
     # env = {Rack::RACK_INPUT => StringIO.new}
 
     res = Rails.application.routes.router.serve(request)
+    # res[0]: http state code
+    # res[1]: headers
+    # res[2]: response
     res[2].body
-  rescue Exception => e
-    res[2].to_s
+  rescue NoMethodError => e
+    res&.to_s || e.full_message
   end
 
   def source_info
