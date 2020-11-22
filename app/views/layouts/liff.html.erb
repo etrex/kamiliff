@@ -5,12 +5,29 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <meta name="viewport" content="width=device-width, initial-scale=1" >
-    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script src="https://static.line-scdn.net/liff/edge/versions/2.5.0/sdk.js"></script>
+
+    <% asset_application_js_path = Dir.glob("#{Rails.root}/app/assets/javascripts/application.*").first %>
+    <% if asset_application_js_path.present? %>
+      <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <% end %>
+
+    <% webpacker_application_js_path = Dir.glob("#{Rails.root}/app/javascript/packs/application.*").first %>
+    <% if webpacker_application_js_path.present? %>
+      <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <% end %>
+
+    <% has_jquery = [asset_application_js_path, webpacker_application_js_path].compact.map do |path|
+      (File.read(path) =~ /jquery/i).present?
+    end.any? %>
+
+    <% unless has_jquery %>
+      <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+      <script> alert("has no jquery") </script>
+    <% end %>
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script>
       function liff_send_text_message(text){
         liff.sendMessages(
