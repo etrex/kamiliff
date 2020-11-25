@@ -41,7 +41,7 @@ Since the compact size is default. You could only create the compact one.
 
 **NOTICE:** As LINE announcement, due to a function enhancement with LIFF v2, you should add LIFF apps to LINE Login channel. The LIFF apps added to Messaging API channels are still allowed to use.
 
-For the [Behaviors from accessing the LIFF URL to opening the LIFF app](https://developers.line.biz/en/docs/liff/opening-liff-app/#redirect-flow) setting, please use the Concatenate mode. That's the default value in the Kamiliff. If you want to use the Replace mode((will be removed on March 1, 2021)[https://developers.line.biz/en/news/2020/11/20/discontinue-replace-mode-announcement/]), you can add an enviroment variable `LIFF_MODE` and set the value to `replace`.
+For the [Behaviors from accessing the LIFF URL to opening the LIFF app](https://developers.line.biz/en/docs/liff/opening-liff-app/#redirect-flow) setting, please use the Concatenate mode. That's the default value in the Kamiliff. If you want to use the Replace mode([will be removed on March 1, 2021](https://developers.line.biz/en/news/2020/11/20/discontinue-replace-mode-announcement/)), you can add an enviroment variable `LIFF_MODE` and set the value to `replace`.
 
 ### Set environment variables
 Create a file `.env` with the following content under the root directory. Kamiliff provides two setting ways, you can choose the one based on the position where LIFF apps added.
