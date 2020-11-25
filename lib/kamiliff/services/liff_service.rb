@@ -20,7 +20,7 @@ class LiffService
     self.size = size.to_s.upcase
     raise "liff_size should be compact, tall or full." unless size.in? %w[COMPACT TALL FULL]
     self.url = ENV["LIFF_#{size}"]
-    raise "LIFF_#{size} should be in the env variables" if url.empty?
+    raise "LIFF_#{size} should be in the env variables" if url.blank?
     self.id = url[(url.rindex('/')+1)..-1]
   end
 end
