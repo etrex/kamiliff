@@ -8,11 +8,18 @@ class LiffController < ActionController::Base
     # fix liff 2.0 redirect issue
     @need_reload = query["liff.state"].present?
     if(@need_reload)
-      querystring = query["liff.state"][(query["liff.state"].index('?')+1)..-1]
-      query = Rack::Utils.parse_nested_query(querystring)
+      if query["liff.state"].index('?').present?
+        querystring = query["liff.state"][(query["liff.state"].index('?')+1)..-1]
+        query = Rack::Utils.parse_nested_query(querystring)
+      end
     end
 
-    @liff = LiffService.new(query)
+    # try base64 decode
+    if params[:base64].present?
+      @liff = LiffBase64Service.from_base64(params[:base64])
+    else
+      @liff = LiffService.new(query)
+    end
   end
 
   def route
