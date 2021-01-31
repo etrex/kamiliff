@@ -29,7 +29,7 @@ class LiffBase64Service
       size: size
     }.to_json
     base64_string = Base64.encode64(json)
-    base64_string.tr('+','-').tr('/','_')[0..-4]
+    base64_string.tr('+','-').tr('/','_').tr("\n", '').tr('=', '')
   end
 
   def initialize(options)
