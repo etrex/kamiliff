@@ -35,7 +35,7 @@ class LiffBase64Service
   def initialize(options)
     options = options.with_indifferent_access
     self.path = options[:path] || "/"
-    self.size = options[:liff_size] || :compact
+    self.size = options[:size] || :compact
     self.size = size.to_s.upcase
     raise "liff_size should be compact, tall or full." unless size.in? %w[COMPACT TALL FULL]
     self.url = ENV["LIFF_#{size}"]
