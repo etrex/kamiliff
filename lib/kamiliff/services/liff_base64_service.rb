@@ -26,7 +26,7 @@ class LiffBase64Service
   def to_base64
     json = {
       path: path,
-      size: size
+      liff_size: size
     }.to_json
     base64_string = Base64.encode64(json)
     base64_string.tr('+','-').tr('/','_').tr("\n", '').tr('=', '')
@@ -35,7 +35,7 @@ class LiffBase64Service
   def initialize(options)
     options = options.with_indifferent_access
     self.path = options[:path] || "/"
-    self.size = options[:size] || :compact
+    self.size = options[:liff_size] || :compact
     self.size = size.to_s.upcase
     raise "liff_size should be compact, tall or full." unless size.in? %w[COMPACT TALL FULL]
     self.url = ENV["LIFF_#{size}"]
