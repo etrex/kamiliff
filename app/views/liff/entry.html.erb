@@ -1,6 +1,6 @@
 <% content_for :js do %>
 <script>
-(function(){
+let open_liff_page = (function(){
   function append_csrf(data){
     var csrf_param = undefined;
     var csrf_token = undefined;
@@ -24,47 +24,55 @@
     $("#liff_body").html(body);
   }
 
-  function dispatch_ready_event(data){
+  function dispatch_liff_ready_event(){
     var event = new CustomEvent('liff_ready');
     window.dispatchEvent(event);
   }
 
-  function route(data){
+  async function liff_init(){
+    alert("liff_init");
+    await liff.init({
+      liffId: "<%= @liff.id %>"
+    });
+    if (!liff.isLoggedIn()) {
+      liff.login();
+    }
+  }
+
+  async function get_liff_data(){
+    alert("get_liff_data");
+    const profile = await liff.getProfile();
+    const context = liff.getContext();
+    return {
+      profile,
+      context
+    }
+  }
+
+  async function open_liff_page(path){
+    alert("open_liff_page: " + path);
+    const data = await get_liff_data();
+    data.path = path;
     $.ajax({
       type: "POST",
       url: '/liff_route',
       data: append_csrf(data)
     }).done(function(html){
       render_body(html);
-      dispatch_ready_event();
+      dispatch_liff_ready_event();
     }).fail(function(e){
       alert("on error: " + JSON.stringify(e));
     });
   }
 
-  window.onload = function() {
-    liff.init({
-      liffId: "<%= @liff.id %>"
-    })
-    .then(() => {
-      if (!liff.isLoggedIn()) {
-        liff.login();
-      }else{
-        liff.getProfile().then(profile => {
-          const data = {};
-          data.context = liff.getContext();
-          data.profile = profile;
-          data.path = "<%= @liff.path %>";
-          <% if !@need_reload %>
-            route(data);
-          <% end %>
-        })
-      }
-    })
-    .catch((err) => {
-      console.log(err.code, err.message);
-    });
+  window.onload = async function() {
+    await liff_init();
+    <% if !@need_reload %>
+      await open_liff_page("<%= @liff.path %>");
+    <% end %>
   };
+
+  return open_liff_page;
 })();
 </script>
 <% end %>
