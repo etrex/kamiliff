@@ -30,7 +30,8 @@ class LiffController < ActionController::Base
   def route
     path, query = params["path"].split("?")
     query = Rack::Utils.parse_nested_query(query)
-    @body = reserve_route(path, request_params: source_info.merge(query), format: :liff)
+    http_method = query["_method"]&.upcase || "GET"
+    @body = reserve_route(path, http_method: http_method, request_params: source_info.merge(query), format: :liff)
   end
 
   private
