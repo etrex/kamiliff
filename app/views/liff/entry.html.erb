@@ -30,7 +30,6 @@ let open_liff_page = (function(){
   }
 
   async function liff_init(){
-    alert("liff_init");
     await liff.init({
       liffId: "<%= @liff.id %>"
     });
@@ -40,7 +39,6 @@ let open_liff_page = (function(){
   }
 
   async function get_liff_data(){
-    alert("get_liff_data");
     const profile = await liff.getProfile();
     const context = liff.getContext();
     return {
@@ -50,7 +48,6 @@ let open_liff_page = (function(){
   }
 
   async function open_liff_page(path){
-    alert("open_liff_page: " + path);
     const data = await get_liff_data();
     data.path = path;
     $.ajax({
