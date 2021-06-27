@@ -9,7 +9,7 @@ module LiffHelper
   end
 
   def liff_path(params)
-    liff = LiffBase64Service.new(params)
+    liff = LiffService.new(params)
     liff.full_url
   end
 end

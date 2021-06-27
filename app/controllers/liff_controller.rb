@@ -1,30 +1,10 @@
 
 class LiffController < ActionController::Base
   layout false, only: :route
+  before_action :set_liff_param, only: [:entry]
 
   def entry
-    query = Rack::Utils.parse_nested_query(request.query_string)
-
-    # fix liff 2.0 redirect issue
-    @need_reload = query["liff.state"].present?
-
-    # 第一次 redirect
-    if(@need_reload)
-      if(query["liff.state"][0] == '/')
-        @liff = LiffBase64Service.from_base64(query["liff.state"][1..-1])
-      else
-        querystring = query["liff.state"][(query["liff.state"].index('?')+1)..-1]
-        query = Rack::Utils.parse_nested_query(querystring)
-        @liff = LiffService.new(query)
-      end
-    # 第二次 redirect
-    else
-      if params[:base64].present?
-        @liff = LiffBase64Service.from_base64(params[:base64])
-      else
-        @liff = LiffService.new(query)
-      end
-    end
+    @liff = LiffService.new(@liff_param)
   end
 
   def route
@@ -35,6 +15,47 @@ class LiffController < ActionController::Base
   end
 
   private
+
+  # {"path"=>"/orders", "liff_size"=>"TALL"}
+  def set_liff_param
+    query = Rack::Utils.parse_nested_query(request.query_string)
+
+    # fix liff 2.0 redirect issue
+    @need_reload = query["liff.state"].present?
+
+    # 需要從 session 讀取 @liff_param
+    if query["liffRedirectUri"].present?
+      @liff_param = Base64DecodeService.new(session[:liff_param]).run
+      session[:liff_param] = nil
+      return
+    end
+
+    # 第一次 redirect
+    if(@need_reload)
+      # base64 的情況
+      if(query["liff.state"][0] == '/')
+        base64_string = query["liff.state"][1..-1]
+        @liff_param = Base64DecodeService.new(base64_string).run
+      # query 的情況
+      else
+        querystring = query["liff.state"][(query["liff.state"].index('?')+1)..-1]
+        @liff_param = Rack::Utils.parse_nested_query(querystring)
+      end
+    # 第二次 redirect
+    else
+      # base64 的情況
+      if params[:base64].present?
+        base64_string = params[:base64]
+        @liff_param = Base64DecodeService.new(base64_string).run
+      # query 的情況
+      else
+        @liff_param = query
+      end
+    end
+
+    # 保存最後一次 liff_param 到 session
+    session[:liff_param] = Base64EncodeService.new(@liff_param).run
+  end
 
   def reserve_route(path, http_method: "GET", request_params: nil, format: nil)
     request.request_method = http_method
