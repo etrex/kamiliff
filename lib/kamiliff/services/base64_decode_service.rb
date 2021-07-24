@@ -7,7 +7,8 @@ class Base64DecodeService
   end
 
   def run
-    json = Base64.decode64(@base64_string)
+    string = @base64_string.tr('-','+').tr('_','/')
+    json = Base64.decode64(string)
     options = JSON.parse(json)
     options.with_indifferent_access
   end
