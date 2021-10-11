@@ -1,3 +1,8 @@
+<%
+  messages = [messages] if messages.is_a? Hash
+  messages = messages.to_json if messages.is_a? Array
+%>
+
 <script>
   (function(){
     async function share_target_picker(messages){

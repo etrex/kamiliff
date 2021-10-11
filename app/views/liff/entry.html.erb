@@ -38,8 +38,16 @@ let open_liff_page = (function(){
     }
   }
 
+  async function get_liff_profile(){
+    try{
+      return await liff.getProfile();
+    }catch(error){
+      return {};
+    }
+  }
+
   async function get_liff_data(){
-    const profile = await liff.getProfile();
+    const profile = await get_liff_profile();
     const context = liff.getContext();
     return {
       profile,

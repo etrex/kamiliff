@@ -1,0 +1,16 @@
+<%
+  messages = [messages] if messages.is_a? Hash
+  messages = messages.to_json if messages.is_a? Array
+%>
+
+<script>
+  (function(){
+    async function send_messages(){
+      const messages = <%= raw messages %>;
+      await liff.sendMessages(messages);
+      liff.closeWindow();
+    }
+
+    send_messages();
+  })();
+</script>
