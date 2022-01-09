@@ -49,9 +49,11 @@ let open_liff_page = (function(){
   async function get_liff_data(){
     const profile = await get_liff_profile();
     const context = liff.getContext();
+    const idToken = liff.getIDToken();
     return {
-      profile,
-      context
+      context,
+      idToken,
+      profile
     }
   }
 
