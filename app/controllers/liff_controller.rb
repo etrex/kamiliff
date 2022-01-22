@@ -85,14 +85,23 @@ class LiffController < ActionController::Base
   # }
   def source_info
     context = params["context"]
-    return {} if context.nil?
+    return {
+      platform_type: 'line',
+      liff_error: 'context not found',
+    } if context.nil?
 
     profile = params["profile"]
-    return {} if profile.nil?
+    return {
+      platform_type: 'line',
+      liff_error: 'profile not found',
+    } if profile.nil?
 
     # authorize the user id
     decoded_id_token = get_decoded_id_token
-    return {} unless decoded_id_token["sub"] == profile["userId"] && decoded_id_token["sub"] == profile["userId"]
+    return {
+      platform_type: 'line',
+      liff_error: 'user id does not match',
+    } unless decoded_id_token["sub"] == context["userId"] && decoded_id_token["sub"] == profile["userId"]
 
     source_type = context["type"].gsub("utou", "user")
     source_group_id = context["roomId"] || context["groupId"] || decoded_id_token["sub"]
