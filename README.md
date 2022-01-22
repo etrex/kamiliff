@@ -46,21 +46,13 @@ For the [Behaviors from accessing the LIFF URL to opening the LIFF app](https://
 ### Set environment variables
 Create a file `.env` with the following content under the root directory. Kamiliff provides two setting ways, you can choose the one based on the position where LIFF apps added.
 
-- LIFF apps added to Messaging API channel (v1)
 ```
-LIFF_COMPACT=line://app/{FOR_COMPACT_LIFF_ID}
-LIFF_TALL=line://app/{FOR_TALL_LIFF_ID}
-LIFF_FULL=line://app/{FOR_FULL_LIFF_ID}
-```
-
-- LIFF apps added to LINE Login channel (v2)
-```
+LINE_LOGIN_CHANNEL_ID={LINE_LOGIN_CHANNEL_ID}
+LINE_LOGIN_CHANNEL_SECRET={LINE_LOGIN_CHANNEL_SECRET}
 LIFF_COMPACT=https://liff.line.me/{FOR_COMPACT_LIFF_ID}
 LIFF_TALL=https://liff.line.me/{FOR_TALL_LIFF_ID}
 LIFF_FULL=https://liff.line.me/{FOR_FULL_LIFF_ID}
 ```
-
-You could choose another setting method.
 
 ### Generate simple todo resource
 Create todo resource:
