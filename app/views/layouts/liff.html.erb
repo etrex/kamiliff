@@ -17,6 +17,11 @@
       <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
     <% end %>
 
+    <% importmap_config_path = Dir.glob("#{Rails.root}/config/importmap.*").first %>
+    <% if importmap_config_path.present? %>
+      <%= javascript_importmap_tags %>
+    <% end %>
+
     <% has_jquery = [asset_application_js_path, webpacker_application_js_path].compact.map do |path|
       (File.read(path) =~ /jquery/i).present?
     end.any? %>
