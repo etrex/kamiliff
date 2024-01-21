@@ -49,11 +49,13 @@ let open_liff_page = (function(){
   async function get_liff_data(){
     const profile = await get_liff_profile();
     const context = liff.getContext();
+    const language = liff.getLanguage();
     const idToken = liff.getIDToken();
     return {
       context,
       idToken,
-      profile
+      profile,
+      language
     }
   }
 

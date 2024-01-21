@@ -126,7 +126,8 @@ class LiffController < ActionController::Base
       source_user_id: source_user_id,
       context: context,
       profile: profile,
-      decoded_id_token: decoded_id_token
+      decoded_id_token: decoded_id_token,
+      language: params["language"]
     }
   end
 
