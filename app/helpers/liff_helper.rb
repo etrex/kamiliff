@@ -1,15 +1,5 @@
 module LiffHelper
-  def old_liff_path(params)
-    liff = LiffService.new(params)
-    if ENV["LIFF_MODE"]&.downcase == "replace"
-      return "#{liff.url}/liff_entry?#{params.to_query}"
-    end
-    # liff mode is Concatenate
-    "#{liff.url}?#{params.to_query}"
-  end
-
-  def liff_path(params)
-    liff = LiffService.new(params)
-    liff.full_url
+  def liff_path(entry:, liff_size: :compact)
+    LiffService.new(entry: entry, liff_size: liff_size).full_url
   end
 end

@@ -1,36 +1,20 @@
+# frozen_string_literal: true
+require 'uri'
 class LiffService
-
-  # rails routes path
-  attr_accessor :path
-
-  # size
-  # COMPACT TALL FULL
-  attr_accessor :size
-
-  # liff app url
-  # https://liff.line.me/app/#{liff_id}
-  attr_accessor :url
-
-  # liff id
-  attr_accessor :id
+  attr_reader :entry, :size, :url, :id
 
   def initialize(options)
-    self.path = options[:path] || "/"
-    self.size = options[:liff_size] || :compact
-    self.size = size.to_s.upcase
-    raise "liff_size should be compact, tall or full." unless size.in? %w[COMPACT TALL FULL]
-    self.url = ENV["LIFF_#{size}"]
-    raise "LIFF_#{size} should be in the env variables" if url.blank?
-    self.id = url[(url.rindex('/')+1)..-1]
+    @entry = options.fetch(:entry).to_s
+    raise ArgumentError, 'invalid entry name' unless /\A[a-z][a-z0-9_]*\z/.match?(@entry)
+    @size = options.fetch(:liff_size, :compact).to_s.upcase
+    raise ArgumentError, 'invalid LIFF size' unless %w[COMPACT TALL FULL].include?(@size)
+    @url = ENV.fetch("LIFF_#{@size}")
+    uri = URI.parse(@url)
+    raise ArgumentError, 'expected https://liff.line.me/<id>' unless uri.scheme == 'https' && uri.host == 'liff.line.me' && !uri.userinfo && !uri.query && !uri.fragment && uri.path.match?(%r{\A/[^/]+\z})
+    @id = uri.path.delete_prefix('/')
   end
 
   def full_url
-    # liff mode is Concatenate
-    base64_string = Base64EncodeService.new({
-      path: path,
-      liff_size: size
-    }).run
-    "#{url}/#{base64_string}"
+    "#{url}?#{URI.encode_www_form(entry: entry)}"
   end
-
 end

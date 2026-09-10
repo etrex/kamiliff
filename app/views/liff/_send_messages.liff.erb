@@ -1,12 +1,12 @@
 <%
-  messages = [messages] if messages.is_a? Hash
-  messages = messages.to_json if messages.is_a? Array
+  messages = [messages] if messages.is_a?(Hash)
+  raise ArgumentError, 'messages must be an Array of Hashes' unless messages.is_a?(Array) && messages.all? { |message| message.is_a?(Hash) }
 %>
 
 <script>
   (function(){
     async function send_messages(){
-      const messages = <%= raw messages %>;
+      const messages = <%= raw json_escape(messages.to_json) %>;
       await liff.sendMessages(messages);
       liff.closeWindow();
     }

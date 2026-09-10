@@ -1,5 +1,5 @@
 <script>
-  document.title = "<%= yield :title %>";
+  document.title = <%= raw json_escape((yield :title).to_s.to_json) %>;
 </script>
 
 <div class="container-fluid">

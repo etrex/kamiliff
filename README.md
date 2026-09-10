@@ -1,123 +1,60 @@
-# Kamiliff
-Kamiliff make LIFF easy to use.
+# Kamiliff 1.0
 
-# Feature
-- register LIFF once and reuse to your all path.
-- liff_submit event: a hook when LIFF form submit, with form data in js object format.
-- liff_send_text_message: quick send message and close LIFF.
+Rails LIFF view and verified-identity integration. **Breaking rewrite:** old
+request forwarding and automatic form-to-chat commands are removed.
 
-## Installation & Usage
-### Create a new rails repository:
+## Explicit application entries
 
-```bash
-# create rails repository
-rails new kamiliff_demo
-# change directory
-cd kamiliff_demo
-# install gem
-bundle add kamiliff
-bundle add dotenv-rails
+Configure a LIFF endpoint on your host application. Register server-owned entry
+names during initialization; no submitted Rails path or HTTP method is executed:
+
+```ruby
+Kamiliff.register_entry('warehouse') do |controller|
+  # Render a host-owned LIFF bootstrap page. Its subsequent authenticated actions
+  # use normal Rails routes, CSRF, authorization, and database transactions.
+  controller.render template: 'warehouse/entry'
+end
 ```
 
-### Add LIFF Endpoint URL
-Login to LINE Developers, and create 3 LIFF for 3 different size.
+Use `liff_path(entry: 'warehouse', liff_size: :compact)` with `LIFF_COMPACT`,
+`LIFF_TALL`, or `LIFF_FULL` set to `https://liff.line.me/<LIFF-ID>`.
+Unknown entries return 404. The legacy `/liff_route` action returns 410.
 
-- For compact
-  - LIFF app name: Compact
-  - Size: Compact
-  - Endpoint URL: https://yourwebsite/liff_entry
+The host must initialize its supported LIFF SDK version and handle the documented
+LIFF redirect/bootstrap lifecycle. Kamiliff no longer injects jQuery, Bootstrap,
+a dated SDK, or intercepts forms. Use ordinary Rails/Hotwire forms and explicit
+Stimulus actions. The minimal `liff` layout exposes a `:head` content slot.
+The send/share partials accept structured message hashes only and safely embed
+JSON; they are explicit user-flow helpers, not default background actions.
 
-- For tall
-  - LIFF app name: Tall
-  - Size: Tall
-  - Endpoint URL: https://yourwebsite/liff_entry
+## Verify identity on the server
 
-- For full
-  - LIFF app name: Full
-  - Size: Full
-  - Endpoint URL: https://yourwebsite/liff_entry
-
-Since the compact size is default. You could only create the compact one.
-
-**NOTICE:** As LINE announcement, due to a function enhancement with LIFF v2, you should add LIFF apps to LINE Login channel. The LIFF apps added to Messaging API channels are still allowed to use.
-
-For the [Behaviors from accessing the LIFF URL to opening the LIFF app](https://developers.line.biz/en/docs/liff/opening-liff-app/#redirect-flow) setting, please use the Concatenate mode. That's the default value in the Kamiliff. If you want to use the Replace mode([will be removed on March 1, 2021](https://developers.line.biz/en/news/2020/11/20/discontinue-replace-mode-announcement/)), you can add an enviroment variable `LIFF_MODE` and set the value to `replace`.
-
-### Set environment variables
-Create a file `.env` with the following content under the root directory. Kamiliff provides two setting ways, you can choose the one based on the position where LIFF apps added.
-
-```
-LINE_LOGIN_CHANNEL_ID={LINE_LOGIN_CHANNEL_ID}
-LINE_LOGIN_CHANNEL_SECRET={LINE_LOGIN_CHANNEL_SECRET}
-LIFF_COMPACT=https://liff.line.me/{FOR_COMPACT_LIFF_ID}
-LIFF_TALL=https://liff.line.me/{FOR_TALL_LIFF_ID}
-LIFF_FULL=https://liff.line.me/{FOR_FULL_LIFF_ID}
+```ruby
+verifier = Kamiliff::IdTokenVerifier.new(
+  client: line_verification_client, client_id: ENV.fetch('LINE_LOGIN_CHANNEL_ID')
+)
+identity = verifier.verify(id_token: submitted_token, expected_nonce: server_nonce)
 ```
 
-### Generate simple todo resource
-Create todo resource:
+The injected client must implement `verify_id_token(id_token:, client_id:)` by
+calling LINE's verification endpoint over authenticated HTTPS with bounded
+network timeouts. It must reject unsuccessful responses and return the verified
+claims Hash. This gem checks issuer, exact audience, subject, expiry, and an
+expected nonce when supplied. A JWT decode-only client is **not** a verifier.
+No production network client, OAuth callback, or session creation is bundled.
 
-```bash
-rails g scaffold todo name desc
-rails db:migrate
+The host owns nonce generation/one-time consumption, recent-login requirements,
+CSRF, session rotation/revocation, and authorization. Never trust `getProfile`,
+`getContext`, decoded browser JWTs, group IDs, or display names as identity or
+membership evidence. Verified user identity does not establish group membership;
+a group warehouse requires a separate server-verified eligibility policy.
+
+## Verification
+
+From sibling `kamigo`, under its Ruby 4 bundle:
+
+```sh
+bundle exec ruby -I../kamiliff/lib ../kamiliff/test/v1/security_test.rb
 ```
 
-### Create LIFF view
-Create liff view for new action at `app/views/todos/new.liff.erb`.
-
-```
-<%= render "todos/form.html", todo: @todo %>
-
-<script>
-document.title = "new todo";
-
-window.addEventListener("liff_submit", function(event){
-  var json = JSON.stringify(event.detail.data);
-  var url = event.detail.url;
-  var method = event.detail.method;
-  var request_text = method + " " + url + "\n" + json;
-  liff_send_text_message(request_text);
-});
-</script>
-```
-
-The javascript listen to submit button click, and build the message from form data, and send to current LINE chatroom, and then close the LIFF webview.
-
-You could modify those javascript to change the format.
-
-### Test LIFF view
-Add following content into `app/views/todos/index.html.erb`.
-
-```
-<%= liff_path(path: new_todo_path) %>
-```
-
-Copy this url and paste to any LINE chatroom.
-
-Click this url in LINE app.
-
-The correct usage is put this url into Rich Manu or Flex Message or Template Message with url action.
-
-### How to change LIFF size
-You can change the size of LIFF by adding a parameter to the helper method, like this:
-
-```
-<%= liff_path(path: new_todo_path, liff_size: :compact) %>
-<%= liff_path(path: new_todo_path, liff_size: :tall) %>
-<%= liff_path(path: new_todo_path, liff_size: :full) %>
-```
-
-## Apps use Kamiliff
-See my kamiliff demo: [https://github.com/etrex/kamiliff_demo](https://github.com/etrex/kamiliff_demo)
-
-## Author
-Create by [etrex](https://etrex.tw)
-
-## License
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
-
-## How to test this gem
-
-```
-rails t
-```
+Tests use injected claims and local Rack requests, not live LINE authentication.

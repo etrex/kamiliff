@@ -1,13 +1,9 @@
-/* kamiliff default behavior */
-window.addEventListener("liff_ready", function(event){
-  register_kamiliff_submit();
+/* Kamiliff 1.0 has no automatic form interception or route-as-chat execution.
+ * Initialize the LIFF SDK in your host page/Stimulus controller. Submit forms
+ * through ordinary Rails routes with CSRF and server-side authorization. */
+window.Kamiliff = Object.freeze({
+  async sendText(text, { close = false } = {}) {
+    await window.liff.sendMessages([{ type: "text", text: String(text) }]);
+    if (close) window.liff.closeWindow();
+  }
 });
-
-window.addEventListener("liff_submit", function(event){
-  var json = JSON.stringify(event.detail.data);
-  var url = event.detail.url;
-  var method = event.detail.method;
-  var request_text = method + " " + url + "\n" + json;
-  liff_send_text_message(request_text);
-});
-
