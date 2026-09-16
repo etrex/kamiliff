@@ -37,3 +37,6 @@ exact packaged JS, JavaScript content type, and `max-age=300, public`.
 Repeat with its ETag in If-None-Match: 304, empty body. Automated integration
 runs this exact executable. No browser execution or live LINE is claimed here;
 browser lifecycle acceptance is recorded separately.
+
+Follow-up public API manual check: empty `liff.state=` accepts the default entry;
+`page=ranking&liff.state=` retains the explicit page. Matching unit assertions added.

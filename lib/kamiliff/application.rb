@@ -43,7 +43,7 @@ module Kamiliff
       end
       state = direct.delete('liff.state')
       navigation = direct.select { |key, _| parameters.include?(key) }
-      if state
+      if state && !state.empty?
         raise ArgumentError, 'invalid LIFF state' unless state.start_with?('?')
         nested = decode(state.delete_prefix('?'))
         raise ArgumentError, 'unknown LIFF state parameter' unless (nested.keys - parameters).empty?

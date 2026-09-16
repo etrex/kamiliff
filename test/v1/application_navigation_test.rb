@@ -12,6 +12,8 @@ class ApplicationNavigationTest < Minitest::Test
     assert_equal({ 'page' => 'ranking' }, app.parse('page=ranking&code=oauth&state=nonce'))
     assert_equal 'https://liff.line.me/123-abc?page=ranking', app.url(page: 'ranking', group: nil)
     assert_raises(ArgumentError) { app.url(unknown: nil) }
+    assert_equal({}, app.parse('liff.state='))
+    assert_equal({ 'page' => 'ranking' }, app.parse('page=ranking&liff.state='))
     assert app.frozen?
     assert app.parameters.frozen?
     assert app.parameters.all?(&:frozen?)
