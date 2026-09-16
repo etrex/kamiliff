@@ -77,8 +77,9 @@ verify that token server-side, establish/rotate the host session and return JSON
 web session when the SDK is not logged in, without treating browser profile
 claims as proof.
 
-When external-browser SDK login is required, `liff.login()` uses the SDK's
-current endpoint. The library first directs clean navigation outside that
+When external-browser SDK login is required, `liff.login({redirectUri})` uses
+the validated canonical `entryUrl`, preserving page/group/invitation parameters
+(the SDK default can return only to the registered endpoint). The library first directs clean navigation outside that
 endpoint to `entryUrl`; it refuses to rewrite an in-progress OAuth/LIFF callback.
 The optional host `fallback(error)` handles SDK initialization failures, missing
 ID tokens or the explicit JSON error `invalid_line_identity`. A non-2xx

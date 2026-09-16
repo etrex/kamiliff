@@ -24,13 +24,13 @@ test('SDK return outside endpoint fails closed and never changes URL', async () 
   }
 });
 
-test('initial redirect completes init before login and never overrides redirectUri', async () => {
+test('initial redirect completes init before login and preserves canonical return parameters', async () => {
   let complete, calls = [];
   const context = {window: {liff: {init: () => {calls.push('init');return new Promise(resolve => {complete = resolve;});},
-    isLoggedIn: () => false, login: (...args) => {assert.equal(args.length, 0);calls.push('login');}}},
+    isLoggedIn: () => false, login: (options) => {assert.equal(options.redirectUri, 'https://example.test/entry?page=ranking&group=3');calls.push('login');}}},
     location: new URL('https://example.test/entry?liff.state=%3Fpage%3Dranking'), URL, setTimeout, clearTimeout};
   vm.runInNewContext(source, context);
-  const client = context.window.Kamiliff.createSession({liffId: 'example', endpointPath: '/entry', entryUrl: '/entry?page=ranking', sessionUrl: '/session', csrfToken: () => 'csrf'});
+  const client = context.window.Kamiliff.createSession({liffId: 'example', endpointPath: '/entry', entryUrl: '/entry?page=ranking&group=3', sessionUrl: '/session', csrfToken: () => 'csrf'});
   void client.authenticate(); await new Promise(resolve => setImmediate(resolve)); assert.deepEqual(calls, ['init']);
   complete(); await new Promise(resolve => setImmediate(resolve)); assert.deepEqual(calls, ['init', 'login']);
 });

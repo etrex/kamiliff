@@ -96,7 +96,9 @@
       }
       if (!sdk.isLoggedIn()) {
         if (webAuthenticated) return {status: 'web_session'};
-        try { sdk.login(); } catch (error) { return recover(error); }
+        // SDK default login may use only the registered endpoint, discarding
+        // navigation parameters. Use the validated canonical entry, never href.
+        try { sdk.login({redirectUri: entry.href}); } catch (error) { return recover(error); }
         return pendingNavigation();
       }
       const token = sdk.getIDToken();

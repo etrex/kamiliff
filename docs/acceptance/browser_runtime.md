@@ -30,3 +30,13 @@ See kamigo_bot docs/acceptance/games/work/line_ranking_liff.md for HTTP coverage
 
 Real mobile LINE SDK/login and native share UI remain platform verification;
 these synthetic checks do not establish that every LINE client behaves alike.
+
+## KML-BROWSER-002 — real SDK login return correction
+Production v45 CUA reached official LINE Login (not400), but the SDK's default
+login return discarded `page=ranking` and returned to the game. This invalidated
+the assumption in the original synthetic navigation unit case. Fix: supply
+`redirectUri` from the same-origin, endpoint-validated canonical `entryUrl`,
+never raw location.href. On the updated loopback UI, click external browser
+login: visible redirectUri retains `?page=ranking&group=3`. Updated the matching
+public JS contract test after this manual check. Real provider recheck follows
+production deployment of1.1.1; no claim that v45 completed ranking login.

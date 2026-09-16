@@ -5,16 +5,17 @@ import json
 ROOT = Path(__file__).resolve().parents[2]
 PAGE = '''<!doctype html><meta charset="utf-8"><title>Kamiliff 合成 SDK 驗收</title>
 <h1>Kamiliff 合成 SDK 驗收</h1><p>本機模擬平台，不會發送 LINE 訊息。</p>
-<button id="auth">驗證身分（同時兩次）</button><button id="cancel">取消分享</button><button id="unsupported">不支援分享</button><button id="share">分享成功並關閉</button><button id="fail">發送失敗</button><button id="send">發送成功並關閉</button><button id="conflict">帳號衝突</button><button id="invalid">憑證失效</button>
+<button id="login">外部瀏覽器登入返回網址</button><button id="auth">驗證身分（同時兩次）</button><button id="cancel">取消分享</button><button id="unsupported">不支援分享</button><button id="share">分享成功並關閉</button><button id="fail">發送失敗</button><button id="send">發送成功並關閉</button><button id="conflict">帳號衝突</button><button id="invalid">憑證失效</button>
 <pre id="result">等待操作</pre><script>
 let mode='success', initializations=0, closes=0, requests=0, fallbacks=0;
-window.liff={init:async()=>{initializations++},isLoggedIn:()=>true,getIDToken:()=>mode,
-isInClient:()=>true,isApiAvailable:()=>mode!=='unsupported',
+window.liff={init:async()=>{initializations++},isLoggedIn:()=>mode!=='login',getIDToken:()=>mode,
+login:options=>{document.querySelector('#result').textContent=JSON.stringify(options)},isInClient:()=>true,isApiAvailable:()=>mode!=='unsupported',
 shareTargetPicker:async()=>mode==='cancel'?undefined:{status:'success'},
 sendMessages:async()=>{if(mode==='fail')throw new Error('delivery_failed')},closeWindow:()=>{closes++}};
 </script><script src="/kamiliff/sdk.js"></script><script>
-const client=Kamiliff.createSession({liffId:'synthetic-app',endpointPath:'/entry',entryUrl:'/entry',sessionUrl:'/session',csrfToken:()=> 'synthetic-csrf',onVerified:()=>{requests++},fallback:async()=>{fallbacks++;return{status:'fallback'}}});
+const client=Kamiliff.createSession({liffId:'synthetic-app',endpointPath:'/entry',entryUrl:'/entry?page=ranking&group=3',sessionUrl:'/session',csrfToken:()=> 'synthetic-csrf',onVerified:()=>{requests++},fallback:async()=>{fallbacks++;return{status:'fallback'}}});
 async function run(next,action){mode=next;try {let result=await action();document.querySelector('#result').textContent=JSON.stringify({result,initializations,closes,requests,fallbacks})}catch(error){document.querySelector('#result').textContent=JSON.stringify({error:error.code||error.message,initializations,closes,requests,fallbacks})}}
+document.querySelector('#login').onclick=()=>run('login',()=>client.authenticate());
 document.querySelector('#auth').onclick=()=>run('success',()=>Promise.all([client.authenticate(),client.authenticate()]));
 for(const name of ['cancel','unsupported','share'])document.getElementById(name).onclick=()=>run(name,()=>client.shareMessages([{type:'text',text:'synthetic'}],{close:true}));
 for(const name of ['fail','send'])document.getElementById(name).onclick=()=>run(name,()=>client.sendMessages([{type:'text',text:'synthetic'}],{close:true}));
