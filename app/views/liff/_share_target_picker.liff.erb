@@ -1,36 +1,13 @@
-<%
-  messages = [messages] if messages.is_a?(Hash)
-  raise ArgumentError, 'messages must be an Array of Hashes' unless messages.is_a?(Array) && messages.all? { |message| message.is_a?(Hash) }
-%>
-
+<% messages = local_assigns.fetch(:messages) %>
+<% messages = [messages] if messages.is_a?(Hash) %>
+<% raise ArgumentError, "messages must be hashes" unless messages.is_a?(Array) && messages.all? { |message| message.is_a?(Hash) } %>
 <script>
-  (function(){
-    async function share_target_picker(messages){
-      /* JS 不支援的情況 */
-      if (!liff.isApiAvailable('shareTargetPicker')){
-        return;
-      }
-
-      /* 分享訊息給好友 */
-      const response = await liff.shareTargetPicker(messages);
-
-      /* 分享訊息失敗 */
-      if(!response){
-        const [majorVer, minorVer] = (liff.getLineVersion() || "").split('.');
-        if (parseInt(majorVer) == 10 && parseInt(minorVer) < 11) {
-          alert("你的 LINE 版本太舊，無法使用分享訊息功能。");
-        } else {
-          alert("你已取消分享訊息。");
-        }
-      }
-    }
-
-    async function send_messages(){
-      const messages = <%= raw json_escape(messages.to_json) %>;
-      await share_target_picker(messages);
-      liff.closeWindow();
-    }
-
-    send_messages();
-  })();
+(async () => {
+  try {
+    const result = await Kamiliff.shareMessages(<%= raw json_escape(messages.to_json) %>, {close: true});
+    document.dispatchEvent(new CustomEvent('kamiliff:message-result', {detail: result}));
+  } catch (error) {
+    document.dispatchEvent(new CustomEvent('kamiliff:message-error', {detail: {code: error.code || 'send_failed'}}));
+  }
+})();
 </script>

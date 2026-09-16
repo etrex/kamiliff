@@ -6,9 +6,25 @@ require 'kamiliff/services/base64_encode_service'
 require 'kamiliff/services/base64_decode_service'
 require 'kamiliff/services/liff_service'
 require 'kamiliff/id_token_verifier'
+require 'kamiliff/application'
 
 module Kamiliff
   class << self
+    def applications
+      @applications ||= {}.freeze
+    end
+
+    def register_application(name, **configuration)
+      raise ArgumentError, 'invalid application name' unless Application::NAME.match?(name.to_s)
+      application = Application.new(**configuration)
+      @applications = applications.merge(name.to_s => application).freeze
+      application
+    end
+
+    def application(name)
+      applications.fetch(name.to_s)
+    end
+
     def entries
       @entries ||= {}.freeze
     end
